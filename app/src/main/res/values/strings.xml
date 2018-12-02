@@ -1,0 +1,5 @@
+<resources>
+    <string name="app_name">OS2-kriptografija</string>
+    <string name="cryptText">Kriptiraj text</string>
+    <string name="text_to_crypt">Text to crypt</string>
+</resources>
