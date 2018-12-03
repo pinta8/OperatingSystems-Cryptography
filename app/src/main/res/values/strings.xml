@@ -1,5 +1,10 @@
 <resources>
     <string name="app_name">OS2-kriptografija</string>
-    <string name="cryptText">Kriptiraj text</string>
-    <string name="text_to_crypt">Text to crypt</string>
+    <string name="kreiraj_text_za_enkripciju">Kreiraj datoteku s tekstom za kreiranje</string>
+    <string name="text_to_crypt">Tekst za kriptiranje</string>
+    <string name="ucitaj_kriptirani_tekst_iz_datoteke">Učitaj kriptirani tekst iz datoteke</string>
+    <string name="kriptiraj_simetricno">Kriptiraj simetrično</string>
+    <string name="dekriptiraj_simetricno">Dekriptiraj simetrično</string>
+    <string name="dekriptirani_tekst">Dekriptirani tekst</string>
+    <string name="kriptirani_tekst">Kriptirani tekst</string>
 </resources>

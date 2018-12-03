@@ -4,44 +4,132 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".MainActivity">
+    tools:context=".MainActivity"
+    tools:layout_editor_absoluteY="89dp">
 
     <Button
-        android:id="@+id/buttonCryptText"
+        android:id="@+id/buttonDecryptDataSymmetric2"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="7dp"
+        android:layout_marginEnd="7dp"
+        android:layout_marginBottom="181dp"
+        android:onClick="decryptSymmetric"
+        android:text="@string/dekriptiraj_simetricno"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/editTextDecryptedText"
+        app:layout_constraintStart_toStartOf="@+id/editTextDecryptedText"
+        app:layout_constraintTop_toBottomOf="@+id/textViewDecryptedText" />
+
+    <Button
+        android:id="@+id/buttonCreateTextForEncryption"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="88dp"
-        android:layout_marginEnd="316dp"
+        android:layout_marginEnd="40dp"
+        android:layout_marginBottom="47dp"
         android:onClick="createText"
-        android:text="@string/cryptText"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:text="@string/kreiraj_text_za_enkripciju"
+        app:layout_constraintBottom_toTopOf="@+id/buttonFileDialog"
+        app:layout_constraintEnd_toEndOf="@+id/editTextToCrypt"
+        app:layout_constraintTop_toBottomOf="@+id/editTextToCrypt" />
 
     <EditText
         android:id="@+id/editTextToCrypt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="87dp"
+        android:layout_marginBottom="18dp"
         android:ems="10"
         android:inputType="textPersonName"
-        android:text="@string/text_to_crypt"
-        app:layout_constraintBottom_toTopOf="@+id/buttonFileDialog"
+        app:layout_constraintBottom_toTopOf="@+id/buttonCreateTextForEncryption"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.52"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewTextToCrypt" />
+
+    <EditText
+        android:id="@+id/editTextEncryptedText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="18dp"
+        android:layout_marginBottom="59dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/textViewDecryptedText"
+        app:layout_constraintStart_toStartOf="@+id/editTextDecryptedText"
+        app:layout_constraintTop_toBottomOf="@+id/textViewEncryptedText" />
+
+    <EditText
+        android:id="@+id/editTextDecryptedText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="41dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/textViewDecryptedText" />
 
     <Button
         android:id="@+id/buttonFileDialog"
-        android:layout_width="138dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="685dp"
+        android:layout_width="219dp"
+        android:layout_height="63dp"
+        android:layout_marginStart="2dp"
+        android:layout_marginEnd="2dp"
+        android:layout_marginBottom="48dp"
         android:onClick="getCryptedText"
-        android:text="Učitaj kriptirani tekst iz datoteke."
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextToCrypt" />
+        android:text="@string/ucitaj_kriptirani_tekst_iz_datoteke"
+        app:layout_constraintBottom_toTopOf="@+id/buttonEncryptDataSymmetric"
+        app:layout_constraintEnd_toEndOf="@+id/editTextToCrypt"
+        app:layout_constraintStart_toStartOf="@+id/editTextToCrypt"
+        app:layout_constraintTop_toBottomOf="@+id/buttonCreateTextForEncryption" />
+
+    <Button
+        android:id="@+id/buttonEncryptDataSymmetric"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="16dp"
+        android:onClick="encryptSymmetric"
+        android:text="@string/kriptiraj_simetricno"
+        app:layout_constraintBottom_toTopOf="@+id/textViewEncryptedText"
+        app:layout_constraintEnd_toEndOf="@+id/textViewEncryptedText"
+        app:layout_constraintStart_toStartOf="@+id/editTextEncryptedText"
+        app:layout_constraintTop_toBottomOf="@+id/buttonFileDialog" />
+
+    <TextView
+        android:id="@+id/textViewTextToCrypt"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="29dp"
+        android:layout_marginBottom="1dp"
+        android:text="@string/text_to_crypt"
+        app:layout_constraintBottom_toTopOf="@+id/editTextToCrypt"
+        app:layout_constraintEnd_toEndOf="@+id/editTextToCrypt"
+        app:layout_constraintStart_toStartOf="@+id/textViewEncryptedText"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/textViewEncryptedText"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="18dp"
+        android:layout_marginEnd="18dp"
+        android:layout_marginBottom="1dp"
+        android:text="@string/kriptirani_tekst"
+        app:layout_constraintBottom_toTopOf="@+id/editTextEncryptedText"
+        app:layout_constraintEnd_toEndOf="@+id/editTextEncryptedText"
+        app:layout_constraintStart_toStartOf="@+id/editTextEncryptedText"
+        app:layout_constraintTop_toBottomOf="@+id/buttonEncryptDataSymmetric" />
+
+    <TextView
+        android:id="@+id/textViewDecryptedText"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="21dp"
+        android:layout_marginEnd="20dp"
+        android:layout_marginBottom="82dp"
+        android:text="@string/dekriptirani_tekst"
+        app:layout_constraintBottom_toTopOf="@+id/buttonDecryptDataSymmetric2"
+        app:layout_constraintEnd_toEndOf="@+id/buttonCreateTextForEncryption"
+        app:layout_constraintStart_toStartOf="@+id/buttonDecryptDataSymmetric2"
+        app:layout_constraintTop_toBottomOf="@+id/editTextEncryptedText" />
 
 </android.support.constraint.ConstraintLayout>
