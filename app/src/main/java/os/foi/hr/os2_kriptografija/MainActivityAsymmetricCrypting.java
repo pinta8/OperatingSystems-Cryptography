@@ -2,9 +2,9 @@ package os.foi.hr.os2_kriptografija;
 
 import android.content.Intent;
 import android.net.Uri;
+import android.os.Bundle;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.util.Base64;
 import android.view.View;
 import android.widget.EditText;
@@ -32,7 +32,7 @@ public class MainActivityAsymmetricCrypting extends AppCompatActivity {
     KeyPair keyPair;
     PublicKey publicKey;
     PrivateKey privateKey;
-    byte[] encryptedBytes, decryptedBytes;
+    byte[] encryptedBytes, decryptedBytes, encodedPublicKey, encodedPrivateKey;
     Cipher cipher, cipher1;
     String encrypted, decrypted;
 
@@ -90,48 +90,75 @@ public class MainActivityAsymmetricCrypting extends AppCompatActivity {
         return stringBuilder.toString();
     }
 
-    public void encryptAsymmetric(View view) throws IllegalBlockSizeException, InvalidKeyException,
-            BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException {
-
+    public void encryptAsymmetric(View view) throws IllegalBlockSizeException, InvalidKeyException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException {
         EditText editTextDataToCrypt = findViewById(R.id.editTextToCrypt);
         String encryptedText = encryptAsymmetric(editTextDataToCrypt.getText().toString());
         EditText editTextEncryptedData = findViewById(R.id.editTextEncryptedText);
         editTextEncryptedData.setText(encryptedText);
+
+        File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        File encryptedFile = new File(dir, "kriptirani_text.txt");
+
+        try (FileWriter fileWriter = new FileWriter(encryptedFile)) {
+            fileWriter.write(encryptedText);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
-    public void decryptAsymmetric(View view) throws IllegalBlockSizeException, InvalidKeyException,
-            BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException {
+    public void decryptAsymmetric(View view) throws IllegalBlockSizeException, InvalidKeyException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException {
 
         EditText editTextEncryptedData = findViewById(R.id.editTextEncryptedText);
-       String decryptedText = decryptAsymmetric(editTextEncryptedData.getText().toString());
+        String decryptedText = decryptAsymmetric(editTextEncryptedData.getText().toString());
         EditText editTextDecryptedData = findViewById(R.id.editTextDecryptedText);
         editTextDecryptedData.setText(decryptedText);
     }
 
-    public String encryptAsymmetric(String plain) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException,
-            BadPaddingException, IllegalBlockSizeException {
+    public String encryptAsymmetric(String plain) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
         keyPairGenerator = KeyPairGenerator.getInstance("RSA");
         keyPairGenerator.initialize(1024);
         keyPair = keyPairGenerator.genKeyPair();
         publicKey = keyPair.getPublic();
         privateKey = keyPair.getPrivate();
 
+        encodedPublicKey = publicKey.getEncoded();
+        encodedPrivateKey = privateKey.getEncoded();
+        writeInFilePublicAndPrivateKey(encodedPublicKey, encodedPrivateKey);
+
         cipher = Cipher.getInstance("RSA");
         cipher.init(Cipher.ENCRYPT_MODE, publicKey);
-        byte[] bytesToEncrypt = Base64.decode(plain, Base64.NO_WRAP);
+        byte[] bytesToEncrypt = Base64.decode(plain, Base64.DEFAULT);
         encryptedBytes = cipher.doFinal(bytesToEncrypt);
-        encrypted = Base64.encodeToString(encryptedBytes, Base64.NO_WRAP);
+        encrypted = Base64.encodeToString(encryptedBytes, Base64.DEFAULT);
         return encrypted;
     }
 
-    public String decryptAsymmetric(String result) throws NoSuchAlgorithmException, NoSuchPaddingException,
-            InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
-
+    public String decryptAsymmetric(String result) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
         cipher1 = Cipher.getInstance("RSA");
         cipher1.init(Cipher.DECRYPT_MODE, privateKey);
-        byte[] bytesToDecrypt = Base64.decode(result, Base64.NO_WRAP);
+        byte[] bytesToDecrypt = Base64.decode(result, Base64.DEFAULT);
         decryptedBytes = cipher1.doFinal(bytesToDecrypt);
-        decrypted = Base64.encodeToString(decryptedBytes, Base64.NO_WRAP);
+        decrypted = Base64.encodeToString(decryptedBytes, Base64.DEFAULT);
         return decrypted;
+    }
+
+    private void writeInFilePublicAndPrivateKey(byte[] publicKey, byte[] privateKey) {
+        File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        File filePublicKey = new File(dir, "javni_kljuc.txt");
+        File filePrivateKey = new File(dir, "privatni_kljuc.txt");
+
+        String publicKeyToWrite = Base64.encodeToString(publicKey, Base64.DEFAULT);
+        String privateKeyToWrite = Base64.encodeToString(privateKey, Base64.DEFAULT);
+
+        try (FileWriter fileWriter = new FileWriter(filePublicKey)) {
+            fileWriter.write(publicKeyToWrite);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try (FileWriter fileWriter = new FileWriter(filePrivateKey)) {
+            fileWriter.write(privateKeyToWrite);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 }
