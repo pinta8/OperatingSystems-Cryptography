@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".MainActivityAsymmetricCrypting"
+    tools:layout_editor_absoluteY="89dp">
+
+    <Button
+        android:id="@+id/buttonCreateTextForEncryption"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="199dp"
+        android:layout_marginBottom="32dp"
+        android:onClick="createText"
+        android:text="@string/kreiraj_text_za_enkripciju"
+        app:layout_constraintBottom_toTopOf="@+id/buttonFileDialog"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextToCrypt" />
+
+    <TextView
+        android:id="@+id/textViewTextToCrypt"
+        android:layout_width="229dp"
+        android:layout_height="0dp"
+        android:layout_marginTop="3dp"
+        android:layout_marginBottom="10dp"
+        android:text="@string/text_to_crypt"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/editTextToCrypt"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <EditText
+        android:id="@+id/editTextToCrypt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="7dp"
+        android:layout_marginBottom="8dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/buttonCreateTextForEncryption"
+        app:layout_constraintStart_toStartOf="@+id/textViewTextToCrypt"
+        app:layout_constraintTop_toBottomOf="@+id/textViewTextToCrypt" />
+
+    <Button
+        android:id="@+id/buttonFileDialog"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="17dp"
+        android:onClick="getCryptedText"
+        android:text="@string/ucitaj_kriptirani_tekst_iz_datoteke"
+        app:layout_constraintBottom_toTopOf="@+id/buttonEncryptAsymmetric"
+        app:layout_constraintEnd_toEndOf="@+id/buttonCreateTextForEncryption"
+        app:layout_constraintStart_toStartOf="@+id/buttonCreateTextForEncryption"
+        app:layout_constraintTop_toBottomOf="@+id/buttonCreateTextForEncryption" />
+
+    <Button
+        android:id="@+id/buttonEncryptAsymmetric"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="4dp"
+        android:onClick="encryptAsymmetric"
+        android:text="@string/kriptiraj_asimetricno"
+        app:layout_constraintBottom_toTopOf="@+id/textViewEncryptedText"
+        app:layout_constraintEnd_toEndOf="@+id/editTextEncryptedText"
+        app:layout_constraintStart_toStartOf="@+id/editTextEncryptedText"
+        app:layout_constraintTop_toBottomOf="@+id/buttonFileDialog" />
+
+    <TextView
+        android:id="@+id/textViewEncryptedText"
+        android:layout_width="154dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="17dp"
+        android:text="@string/kriptirani_tekst"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/editTextEncryptedText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonEncryptAsymmetric" />
+
+    <EditText
+        android:id="@+id/editTextEncryptedText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="11dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toTopOf="@+id/buttonDecryptASymmetric"
+        app:layout_constraintEnd_toEndOf="@+id/buttonDecryptASymmetric"
+        app:layout_constraintTop_toBottomOf="@+id/textViewEncryptedText" />
+
+
+    <Button
+        android:id="@+id/buttonDecryptASymmetric"
+        android:layout_width="237dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="7dp"
+        android:onClick="decryptAsymmetric"
+        android:text="@string/dekriptiraj_asimetricno"
+        app:layout_constraintBottom_toTopOf="@+id/textViewDecryptedText"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextEncryptedText" />
+
+    <TextView
+        android:id="@+id/textViewDecryptedText"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="3dp"
+        android:layout_marginEnd="4dp"
+        android:layout_marginBottom="8dp"
+        android:text="@string/dekriptirani_tekst"
+        android:textSize="20sp"
+        app:layout_constraintBottom_toTopOf="@+id/editTextDecryptedText"
+        app:layout_constraintEnd_toEndOf="@+id/buttonDecryptASymmetric"
+        app:layout_constraintStart_toStartOf="@+id/editTextEncryptedText"
+        app:layout_constraintTop_toBottomOf="@+id/buttonDecryptASymmetric" />
+
+    <EditText
+        android:id="@+id/editTextDecryptedText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="7dp"
+        android:layout_marginBottom="336dp"
+        android:ems="10"
+        android:inputType="textPersonName"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/textViewDecryptedText"
+        app:layout_constraintTop_toBottomOf="@+id/textViewDecryptedText" />
+
+
+</android.support.constraint.ConstraintLayout>

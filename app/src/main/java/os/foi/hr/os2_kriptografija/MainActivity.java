@@ -18,11 +18,19 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.security.InvalidKeyException;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
+import java.security.PrivateKey;
+import java.security.PublicKey;
 import java.security.SecureRandom;
 
+import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
+import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.KeyGenerator;
+import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 import javax.crypto.spec.SecretKeySpec;
 
@@ -107,12 +115,19 @@ public class MainActivity extends AppCompatActivity {
         }
 
         String encryptedString = Base64.encodeToString(encryptedData, Base64.NO_WRAP);
+        String encryptedSecretKey = Base64.encodeToString(key, Base64.NO_WRAP);
 
         File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
         File file = new File(dir, "kriptirani_text.txt");
+        File fileSecretKey = new File(dir, "tajni_kljuc.txt");
 
         try (FileWriter fileWriter = new FileWriter(file)) {
             fileWriter.write(encryptedString);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try (FileWriter fileWriter = new FileWriter(fileSecretKey)) {
+            fileWriter.write(encryptedSecretKey);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -144,5 +159,10 @@ public class MainActivity extends AppCompatActivity {
         String decryptedString = Base64.encodeToString(decryptedData, Base64.NO_WRAP);
         EditText editTextDecrypted = findViewById(R.id.editTextDecryptedText);
         editTextDecrypted.setText(decryptedString);
+    }
+
+    public void switchToAsymmetricCrypting(View view) {
+        Intent intent = new Intent(MainActivity.this, MainActivityAsymmetricCrypting.class);
+        MainActivity.this.startActivity(intent);
     }
 }

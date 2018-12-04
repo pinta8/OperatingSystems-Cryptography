@@ -7,4 +7,7 @@
     <string name="dekriptiraj_simetricno">Dekriptiraj simetrično</string>
     <string name="dekriptirani_tekst">Dekriptirani tekst</string>
     <string name="kriptirani_tekst">Kriptirani tekst</string>
+    <string name="dekriptiraj_asimetricno">DEKRIPTIRAJ ASIMETRIČNO</string>
+    <string name="kriptiraj_asimetricno">KRIPTIRAJ ASIMETRIČNO</string>
+    <string name="prebaci_se_na_asimetri_no_kriptiranje">PREBACI SE NA ASIMETRIČNO KRIPTIRANJE</string>
 </resources>
