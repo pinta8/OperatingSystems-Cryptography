@@ -96,13 +96,17 @@ public class MainActivity extends AppCompatActivity {
         SecretKey skey = kgen.generateKey();
         key = skey.getEncoded();
 
+        EditText editTextDataToEncrypt = findViewById(R.id.editTextToCrypt);
+        String textToEncrypt = editTextDataToEncrypt.getText().toString();
+        byte[] bytesToEncrypt = Base64.decode(textToEncrypt, Base64.NO_WRAP);
+
         try {
-            encryptedData = encrypt(key, b);
+            encryptedData = encrypt(key, bytesToEncrypt);
         } catch (Exception e) {
             e.printStackTrace();
         }
 
-        String encryptedString = Base64.encodeToString(encryptedData, Base64.DEFAULT);
+        String encryptedString = Base64.encodeToString(encryptedData, Base64.NO_WRAP);
 
         File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
         File file = new File(dir, "kriptirani_text.txt");
@@ -125,7 +129,6 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private static byte[] decrypt(byte[] raw, byte[] encrypted) throws Exception {
-        raw = Base64.decode("hehehe", Base64.DEFAULT);
         SecretKeySpec skeySpec = new SecretKeySpec(raw, "AES");
         Cipher cipher = Cipher.getInstance("AES");
         cipher.init(Cipher.DECRYPT_MODE, skeySpec);
@@ -136,9 +139,9 @@ public class MainActivity extends AppCompatActivity {
     public void decryptSymmetric(View view) throws Exception {
         EditText editTextEncrypted = findViewById(R.id.editTextEncryptedText);
         String textForDecription = String.valueOf(editTextEncrypted.getText());
-        byte[] encryptedBytes = Base64.decode(textForDecription, Base64.DEFAULT);
+        byte[] encryptedBytes = Base64.decode(textForDecription, Base64.NO_WRAP);
         byte[] decryptedData = decrypt(key, encryptedBytes);
-        String decryptedString = Base64.encodeToString(decryptedData, Base64.DEFAULT);
+        String decryptedString = Base64.encodeToString(decryptedData, Base64.NO_WRAP);
         EditText editTextDecrypted = findViewById(R.id.editTextDecryptedText);
         editTextDecrypted.setText(decryptedString);
     }
