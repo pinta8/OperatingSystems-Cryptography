@@ -10,4 +10,7 @@
     <string name="dekriptiraj_asimetricno">DEKRIPTIRAJ ASIMETRIČNO</string>
     <string name="kriptiraj_asimetricno">KRIPTIRAJ ASIMETRIČNO</string>
     <string name="prebaci_se_na_asimetri_no_kriptiranje">PREBACI SE NA ASIMETRIČNO KRIPTIRANJE</string>
+    <string name="napravi_sazetak_poruke">NAPRAVI SAŽETAK PORUKE</string>
+    <string name="napravi_digitalni_potpis">NAPRAVI DIGITALNI POTPIS</string>
+    <string name="provjeri_digitalni_potpis">PROVJERI DIGITALNI POTPIS</string>
 </resources>

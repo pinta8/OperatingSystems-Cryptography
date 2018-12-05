@@ -8,6 +8,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Base64;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -15,26 +16,35 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
 import java.security.InvalidKeyException;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
+import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.PrivateKey;
 import java.security.PublicKey;
+import java.security.SecureRandom;
+import java.security.Signature;
+import java.security.SignatureException;
 
 import javax.crypto.BadPaddingException;
 import javax.crypto.Cipher;
 import javax.crypto.IllegalBlockSizeException;
 import javax.crypto.NoSuchPaddingException;
+import javax.crypto.SealedObject;
 
 public class MainActivityAsymmetricCrypting extends AppCompatActivity {
     KeyPairGenerator keyPairGenerator;
     KeyPair keyPair;
     PublicKey publicKey;
     PrivateKey privateKey;
-    byte[] encryptedBytes, decryptedBytes, encodedPublicKey, encodedPrivateKey;
+    byte[] encryptedBytes, decryptedBytes, encodedPublicKey, encodedPrivateKey, digitalSignature;
     Cipher cipher, cipher1;
     String encrypted, decrypted;
+    KeyPairGenerator keyPairGeneratorSign;
+    KeyPair keyPairSign;
+    Signature signer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +100,7 @@ public class MainActivityAsymmetricCrypting extends AppCompatActivity {
         return stringBuilder.toString();
     }
 
-    public void encryptAsymmetric(View view) throws IllegalBlockSizeException, InvalidKeyException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException {
+    public void encryptAsymmetric(View view) throws IllegalBlockSizeException, InvalidKeyException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException, UnsupportedEncodingException {
         EditText editTextDataToCrypt = findViewById(R.id.editTextToCrypt);
         String encryptedText = encryptAsymmetric(editTextDataToCrypt.getText().toString());
         EditText editTextEncryptedData = findViewById(R.id.editTextEncryptedText);
@@ -106,7 +116,7 @@ public class MainActivityAsymmetricCrypting extends AppCompatActivity {
         }
     }
 
-    public void decryptAsymmetric(View view) throws IllegalBlockSizeException, InvalidKeyException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException {
+    public void decryptAsymmetric(View view) throws IllegalBlockSizeException, InvalidKeyException, BadPaddingException, NoSuchAlgorithmException, NoSuchPaddingException, UnsupportedEncodingException {
 
         EditText editTextEncryptedData = findViewById(R.id.editTextEncryptedText);
         String decryptedText = decryptAsymmetric(editTextEncryptedData.getText().toString());
@@ -114,7 +124,7 @@ public class MainActivityAsymmetricCrypting extends AppCompatActivity {
         editTextDecryptedData.setText(decryptedText);
     }
 
-    public String encryptAsymmetric(String plain) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException {
+    public String encryptAsymmetric(String plain) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, BadPaddingException, IllegalBlockSizeException, UnsupportedEncodingException {
         keyPairGenerator = KeyPairGenerator.getInstance("RSA");
         keyPairGenerator.initialize(1024);
         keyPair = keyPairGenerator.genKeyPair();
@@ -127,18 +137,18 @@ public class MainActivityAsymmetricCrypting extends AppCompatActivity {
 
         cipher = Cipher.getInstance("RSA");
         cipher.init(Cipher.ENCRYPT_MODE, publicKey);
-        byte[] bytesToEncrypt = Base64.decode(plain, Base64.DEFAULT);
+        byte[] bytesToEncrypt = plain.getBytes("utf-8");
         encryptedBytes = cipher.doFinal(bytesToEncrypt);
         encrypted = Base64.encodeToString(encryptedBytes, Base64.DEFAULT);
         return encrypted;
     }
 
-    public String decryptAsymmetric(String result) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException {
+    public String decryptAsymmetric(String result) throws NoSuchAlgorithmException, NoSuchPaddingException, InvalidKeyException, IllegalBlockSizeException, BadPaddingException, UnsupportedEncodingException {
         cipher1 = Cipher.getInstance("RSA");
         cipher1.init(Cipher.DECRYPT_MODE, privateKey);
         byte[] bytesToDecrypt = Base64.decode(result, Base64.DEFAULT);
         decryptedBytes = cipher1.doFinal(bytesToDecrypt);
-        decrypted = Base64.encodeToString(decryptedBytes, Base64.DEFAULT);
+        decrypted = new String(decryptedBytes, "utf-8");
         return decrypted;
     }
 
@@ -160,5 +170,57 @@ public class MainActivityAsymmetricCrypting extends AppCompatActivity {
         } catch (IOException e) {
             e.printStackTrace();
         }
+    }
+
+    public void makeMessageDigest(View view) throws NoSuchAlgorithmException, InvalidKeyException, SignatureException, UnsupportedEncodingException {
+        signer = Signature.getInstance("SHA256WithDSA");
+        keyPairGeneratorSign = KeyPairGenerator.getInstance("DSA");
+        keyPairSign = keyPairGeneratorSign.generateKeyPair();
+
+        EditText editTextPlainData = findViewById(R.id.editTextToCrypt);
+        String textToSign = editTextPlainData.getText().toString();
+
+        byte[] digest = MessageDigest.getInstance("SHA-256").digest(textToSign.getBytes());
+        signer.initSign(keyPairSign.getPrivate());
+        signer.update(digest);
+
+        digitalSignature = signer.sign();
+        String textDigestToWrite = Base64.encodeToString(digest, Base64.DEFAULT);
+        String textDigitalSignatureToWrite = Base64.encodeToString(digitalSignature, Base64.DEFAULT);
+
+        writeMessageDigestAndSignatureToFile(textDigestToWrite, textDigitalSignatureToWrite);
+    }
+
+    private void writeMessageDigestAndSignatureToFile(String textDigestToWrite, String textDigitalSignatureToWrite) {
+        File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        File digestToWrite = new File(dir, "sazetak_poruke.txt");
+        File signatureToWrite = new File(dir, "potpis_poruke.txt");
+
+        try (FileWriter fileWriter = new FileWriter(digestToWrite)) {
+            fileWriter.write(textDigestToWrite);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try (FileWriter fileWriter = new FileWriter(signatureToWrite)) {
+            fileWriter.write(textDigitalSignatureToWrite);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void checkSignature(View view) throws NoSuchAlgorithmException, SignatureException, InvalidKeyException {
+        EditText editTextPlainData = findViewById(R.id.editTextToCrypt);
+        String textToCheck = editTextPlainData.getText().toString();
+
+        Signature verifier = Signature.getInstance("SHA256WithDSA");
+        byte[] digestVerifyMessage = MessageDigest.getInstance("SHA-256").digest(textToCheck.getBytes());
+        verifier.initVerify(keyPairSign.getPublic());
+        verifier.update(digestVerifyMessage);
+        boolean signatureVerified = verifier.verify(digitalSignature);
+        if (signatureVerified) {
+            Toast.makeText(getApplicationContext(), "Integritet sadržaja nije ugrožen!", Toast.LENGTH_LONG).show();
+        } else
+            Toast.makeText(getApplicationContext(), "Integritet sadržaja jest ugrožen!", Toast.LENGTH_LONG).show();
     }
 }
